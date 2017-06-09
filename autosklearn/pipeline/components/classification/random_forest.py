@@ -62,9 +62,9 @@ class RandomForest(AutoSklearnClassificationAlgorithm):
             else:
                 max_features = self.max_features
             if self.bootstrap == "True":
-                self.bootstrap = True
+                bootstrap = True
             else:
-                self.bootstrap = False
+                bootstrap = False
             if self.max_leaf_nodes == "None":
                 self.max_leaf_nodes = None
 
@@ -77,7 +77,7 @@ class RandomForest(AutoSklearnClassificationAlgorithm):
                 min_samples_split=self.min_samples_split,
                 min_samples_leaf=self.min_samples_leaf,
                 min_weight_fraction_leaf=self.min_weight_fraction_leaf,
-                bootstrap=self.bootstrap,
+                bootstrap=bootstrap,
                 max_leaf_nodes=self.max_leaf_nodes,
                 random_state=self.random_state,
                 n_jobs=self.n_jobs,
