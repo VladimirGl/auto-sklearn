@@ -57,18 +57,18 @@ class GradientBoosting(AutoSklearnRegressionAlgorithm):
             self.min_samples_leaf = int(self.min_samples_leaf)
             self.min_weight_fraction_leaf = float(self.min_weight_fraction_leaf)
             if self.max_depth == "None":
-                self.max_depth = None
+                max_depth = None
             else:
-                self.max_depth = int(self.max_depth)
+                max_depth = int(self.max_depth)
             num_features = X.shape[1]
             max_features = int(
                 float(self.max_features) * (np.log(num_features) + 1))
             # Use at most half of the features
             max_features = max(1, min(int(X.shape[1] / 2), max_features))
             if self.max_leaf_nodes == "None":
-                self.max_leaf_nodes = None
+                max_leaf_nodes = None
             else:
-                self.max_leaf_nodes = int(self.max_leaf_nodes)
+                max_leaf_nodes = int(self.max_leaf_nodes)
             if self.alpha is not None:
                 self.alpha = float(self.alpha)
             self.verbose = int(self.verbose)
@@ -81,9 +81,9 @@ class GradientBoosting(AutoSklearnRegressionAlgorithm):
                 min_samples_split=self.min_samples_split,
                 min_samples_leaf=self.min_samples_leaf,
                 min_weight_fraction_leaf=self.min_weight_fraction_leaf,
-                max_depth=self.max_depth,
+                max_depth=max_depth,
                 max_features=max_features,
-                max_leaf_nodes=self.max_leaf_nodes,
+                max_leaf_nodes=max_leaf_nodes,
                 init=self.init,
                 random_state=self.random_state,
                 verbose=self.verbose,

@@ -43,10 +43,10 @@ class RandomForest(AutoSklearnRegressionAlgorithm):
 
         if self.estimator is None:
             self.n_estimators = int(self.n_estimators)
-            if self.max_depth == "None" or self.max_depth is None:
-                self.max_depth = None
+            if self.max_depth == "None":
+                max_depth = None
             else:
-                self.max_depth = int(self.max_depth)
+                max_depth = int(self.max_depth)
             self.min_samples_split = int(self.min_samples_split)
             self.min_samples_leaf = int(self.min_samples_leaf)
             if self.max_features not in ("sqrt", "log2", "auto"):
@@ -58,21 +58,21 @@ class RandomForest(AutoSklearnRegressionAlgorithm):
             else:
                 max_features = self.max_features
             if self.bootstrap == "True":
-                self.bootstrap = True
+                bootstrap = True
             else:
-                self.bootstrap = False
-            if self.max_leaf_nodes == "None" or self.max_leaf_nodes is None:
+                bootstrap = False
+            if self.max_leaf_nodes == "None":
                 self.max_leaf_nodes = None
 
             self.estimator = RandomForestRegressor(
                 n_estimators=n_iter,
                 criterion=self.criterion,
                 max_features=max_features,
-                max_depth=self.max_depth,
+                max_depth=max_depth,
                 min_samples_split=self.min_samples_split,
                 min_samples_leaf=self.min_samples_leaf,
                 min_weight_fraction_leaf=self.min_weight_fraction_leaf,
-                bootstrap=self.bootstrap,
+                bootstrap=bootstrap,
                 max_leaf_nodes=self.max_leaf_nodes,
                 random_state=self.random_state,
                 n_jobs=self.n_jobs,
