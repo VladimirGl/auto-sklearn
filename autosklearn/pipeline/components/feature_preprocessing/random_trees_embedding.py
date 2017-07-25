@@ -25,20 +25,20 @@ class RandomTreesEmbedding(AutoSklearnPreprocessingAlgorithm):
         import sklearn.ensemble
 
         if self.max_depth == "None":
-            self.max_depth = None
+            max_depth = None
         else:
-            self.max_depth = int(self.max_depth)
+            max_depth = int(self.max_depth)
         if self.max_leaf_nodes == "None":
-            self.max_leaf_nodes = None
+            max_leaf_nodes = None
         else:
-            self.max_leaf_nodes = int(self.max_leaf_nodes)
+            max_leaf_nodes = int(self.max_leaf_nodes)
 
         self.preprocessor = sklearn.ensemble.RandomTreesEmbedding(
             n_estimators=self.n_estimators,
-            max_depth=self.max_depth,
+            max_depth=max_depth,
             min_samples_split=self.min_samples_split,
             min_samples_leaf=self.min_samples_leaf,
-            max_leaf_nodes=self.max_leaf_nodes,
+            max_leaf_nodes=max_leaf_nodes,
             sparse_output=self.sparse_output,
             n_jobs=self.n_jobs,
             random_state=self.random_state

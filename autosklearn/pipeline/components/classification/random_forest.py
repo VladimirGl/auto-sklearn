@@ -16,7 +16,6 @@ class RandomForest(AutoSklearnClassificationAlgorithm):
                  min_weight_fraction_leaf, bootstrap, max_leaf_nodes,
                  random_state=None, n_jobs=1, class_weight=None):
         self.n_estimators = n_estimators
-        self.estimator_increment = 10
         self.criterion = criterion
         self.max_features = max_features
         self.max_depth = max_depth
@@ -31,10 +30,8 @@ class RandomForest(AutoSklearnClassificationAlgorithm):
         self.estimator = None
 
     def fit(self, X, y, sample_weight=None, refit=False):
-        if self.estimator is None or refit:
-            self.iterative_fit(X, y, n_iter=1, sample_weight=sample_weight,
-                               refit=refit)
-
+        self.iterative_fit(X, y, n_iter=1, sample_weight=sample_weight,
+                           refit=True)
         while not self.configuration_fully_fitted():
             self.iterative_fit(X, y, n_iter=1, sample_weight=sample_weight)
         return self
@@ -48,7 +45,7 @@ class RandomForest(AutoSklearnClassificationAlgorithm):
         if self.estimator is None:
             self.n_estimators = int(self.n_estimators)
             if self.max_depth == "None":
-                self.max_depth = None
+                max_depth = None
             else:
                 self.max_depth = int(self.max_depth)
             self.min_samples_split = int(self.min_samples_split)
@@ -62,9 +59,9 @@ class RandomForest(AutoSklearnClassificationAlgorithm):
             else:
                 max_features = self.max_features
             if self.bootstrap == "True":
-                self.bootstrap = True
+                bootstrap = True
             else:
-                self.bootstrap = False
+                bootstrap = False
             if self.max_leaf_nodes == "None":
                 self.max_leaf_nodes = None
 
@@ -73,11 +70,11 @@ class RandomForest(AutoSklearnClassificationAlgorithm):
                 n_estimators=0,
                 criterion=self.criterion,
                 max_features=max_features,
-                max_depth=self.max_depth,
+                max_depth=max_depth,
                 min_samples_split=self.min_samples_split,
                 min_samples_leaf=self.min_samples_leaf,
                 min_weight_fraction_leaf=self.min_weight_fraction_leaf,
-                bootstrap=self.bootstrap,
+                bootstrap=bootstrap,
                 max_leaf_nodes=self.max_leaf_nodes,
                 random_state=self.random_state,
                 n_jobs=self.n_jobs,
