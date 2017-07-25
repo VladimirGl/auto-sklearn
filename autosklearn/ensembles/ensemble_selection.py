@@ -1,5 +1,6 @@
 from collections import Counter
 import random
+from itertools import compress
 
 import numpy as np
 import six
@@ -36,7 +37,13 @@ class EnsembleSelection(AbstractEnsemble):
             self._fit(predictions, labels)
         self._calculate_weights()
         self.identifiers_ = identifiers
+        self._crop_identifiers()
         return self
+
+    def _crop_identifiers(self):
+        weights_mask = self.weights_ > 0.0
+        self.weights_ = self.weights_[weights_mask]
+        self.identifiers_ = list(compress(self.identifiers_, weights_mask))
 
     def _fit(self, predictions, labels):
         if self.mode == 'fast':
