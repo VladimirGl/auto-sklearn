@@ -30,7 +30,7 @@ requirements = [
     "xgboost==0.4a30",
     "ConfigSpace>=0.3.1,<0.4",
     "pynisher>=0.4",
-    "pyrfr",
+    "pyrfr==0.2.0",
     "smac==0.3.0"
 ]
 
