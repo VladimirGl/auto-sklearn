@@ -15,6 +15,7 @@ psutil
 pyyaml
 liac-arff
 pandas
+xgboost
 
 ConfigSpace>=0.4.0,<0.5
 pynisher>=0.4
