@@ -509,10 +509,15 @@ class AutoML(BaseEstimator):
             raise ValueError(
                 "Predict can only be called if 'keep_models==True'")
 
-        self._load_ensemble_models()
+        if self.models_ is None or len(self.models_) == 0 or \
+                self.ensemble_ is None:
+            self._load_models()
+
+        used_models = self.get_models_with_weights()
+        ensemble_identifiers = [identifier for _, _, identifier in used_models]
 
         random_state = np.random.RandomState(self._seed)
-        for identifier in self.models_:
+        for identifier in ensemble_identifiers:
             if identifier in self.ensemble_.get_model_identifiers():
                 model = self.models_[identifier]
                 # this updates the model inplace, it can then later be used in
