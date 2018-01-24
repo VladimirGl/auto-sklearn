@@ -766,8 +766,8 @@ class AutoML(BaseEstimator):
 
         with io.StringIO() as sio:
             sio.write("[")
-            for weight, model in models_with_weights:
-                sio.write("(%f, %s),\n" % (weight, model))
+            for weight, model, identifier in models_with_weights:
+                sio.write("(%f, %s),\n" % (weight, model, identifier))
             sio.write("]")
 
             return sio.getvalue()

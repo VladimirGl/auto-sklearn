@@ -210,7 +210,7 @@ class EnsembleSelection(AbstractEnsemble):
             identifier = self.identifiers_[i]
             model = models[identifier]
             if weight > 0.0:
-                output.append((weight, model))
+                output.append((weight, model, identifier))
 
         output.sort(reverse=True, key=lambda t: t[0])
 
