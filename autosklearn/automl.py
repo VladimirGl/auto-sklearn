@@ -498,6 +498,47 @@ class AutoML(BaseEstimator):
         self._can_predict = True
         return self
 
+    def refit_ensemble_models(self, X, y):
+        def send_warnings_to_log(message, category, filename, lineno,
+                                 file=None, line=None):
+            self._logger.debug('%s:%s: %s:%s' %
+                               (filename, lineno, category.__name__, message))
+            return
+
+        if self._keep_models is not True:
+            raise ValueError(
+                "Predict can only be called if 'keep_models==True'")
+
+        self._load_ensemble_models()
+
+        random_state = np.random.RandomState(self._seed)
+        for identifier in self.models_:
+            if identifier in self.ensemble_.get_model_identifiers():
+                model = self.models_[identifier]
+                # this updates the model inplace, it can then later be used in
+                # predict method
+
+                # try to fit the model. If it fails, shuffle the data. This
+                # could alleviate the problem in algorithms that depend on
+                # the ordering of the data.
+                for i in range(10):
+                    try:
+                        with warnings.catch_warnings():
+                            warnings.showwarning = send_warnings_to_log
+                            model.fit(X.copy(), y.copy())
+                        break
+                    except ValueError as e:
+                        indices = list(range(X.shape[0]))
+                        random_state.shuffle(indices)
+                        X = X[indices]
+                        y = y[indices]
+
+                        if i == 9:
+                            raise e
+
+        self._can_predict = True
+        return self
+
     def predict(self, X, batch_size=None, n_jobs=1):
         """predict.
 
@@ -608,6 +649,23 @@ class AutoML(BaseEstimator):
                                precision=precision,
                                max_iterations=max_iterations)
 
+    def _load_ensemble_models(self):
+        if self._shared_mode:
+            seed = -1
+        else:
+            seed = self._seed
+
+        self.ensemble_ = self._backend.load_ensemble(seed)
+        if self.ensemble_:
+            used_models = self.get_models_with_weights()
+            identifiers = [identifier for _, _, identifier in used_models]
+            self.models_ = self._backend.load_models_by_identifiers(identifiers)
+            if len(self.models_) == 0 and self._resampling_strategy not in \
+                    ['partial-cv', 'partial-cv-iterative-fit']:
+                raise ValueError('No models fitted!')
+        else:
+            self.models_ = []
+
     def _load_models(self):
         if self._shared_mode:
             seed = -1
@@ -631,10 +689,10 @@ class AutoML(BaseEstimator):
                     ['partial-cv', 'partial-cv-iterative-fit']:
                 raise ValueError('No models fitted!')
 
-            self.models = []
+            self.models_ = []
 
         else:
-            self.models = []
+            self.models_ = []
 
     def score(self, X, y):
         # fix: Consider only index 1 of second dimension
@@ -767,7 +825,7 @@ class AutoML(BaseEstimator):
         with io.StringIO() as sio:
             sio.write("[")
             for weight, model, identifier in models_with_weights:
-                sio.write("(%f, %s),\n" % (weight, model, identifier))
+                sio.write("(%f, %f, %s),\n" % (weight, identifier, model))
             sio.write("]")
 
             return sio.getvalue()
