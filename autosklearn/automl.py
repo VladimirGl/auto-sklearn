@@ -32,10 +32,7 @@ from autosklearn.metrics import f1_macro, accuracy, r2
 from autosklearn.constants import *
 
 
-def _model_predict(self, X, batch_size, identifier, used=True):
-    if used is False:
-        return 0
-
+def _model_predict(self, X, batch_size, identifier):
     def send_warnings_to_log(
             message, category, filename, lineno, file=None, line=None):
         self._logger.debug('%s:%s: %s:%s' %
@@ -588,11 +585,14 @@ class AutoML(BaseEstimator):
                 self.ensemble_ is None:
             self._load_models()
 
+        used_models = self.get_models_with_weights()
+        weights = [weight for weight, _, _ in used_models]
+
         # Parallelize predictions across models with n_jobs processes.
         # Each process computes predictions in chunks of batch_size rows.
         all_predictions = joblib.Parallel(n_jobs=n_jobs)(
-            joblib.delayed(_model_predict)(self, X, batch_size, identifier, used=weight>0)
-            for weight, _, identifier in self.get_models_with_weights())
+            joblib.delayed(_model_predict)(self, X, batch_size, identifier)
+            for _, _, identifier in used_models)
 
         if len(all_predictions) == 0:
             raise ValueError('Something went wrong generating the predictions. '
@@ -601,7 +601,12 @@ class AutoML(BaseEstimator):
                              '%s' % (str(list(self.ensemble_indices_.keys())),
                                      str(list(self.models_.keys()))))
 
-        predictions = self.ensemble_.predict(all_predictions)
+        # compute ensemble here, instead of using ensemble.predict method,
+        # since it requires predictions from all models)
+        for i, weight in enumerate(weights):
+            all_predictions[i] *= weight
+
+        predictions = np.sum(all_predictions, axis=0)
         return predictions
 
     def fit_ensemble(self, y, task=None, metric=None, precision='32',
