@@ -91,7 +91,7 @@ class LightGBMClassifier(AutoSklearnClassificationAlgorithm):
         learning_rate = UniformFloatHyperparameter(
             name="learning_rate", lower=0.01, upper=1, default_value=0.1, log=True)
         n_estimators = UniformIntegerHyperparameter(
-            name="n_estimators", 50, 500, default_value=100)
+            name="n_estimators", lower=50, upper=500, default_value=100)
         max_bin = UniformIntegerHyperparameter(
             name="max_bin", lower=5, upper=255, default_value=255)
 
