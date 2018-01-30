@@ -462,10 +462,11 @@ class AutoML(BaseEstimator):
                 "No models to compress, call fit and/or refit first.")
 
         used_models = self.get_models_with_weights()
-        for weight, _, identifier in used_models:
-            if weight == 0:
-                self.models_[identifier] = None
+        used_identifiers = [identifier for _, _, identifier in used_models]
 
+        for identifier in self.models_:
+            if identifier not in used_identifiers:
+                self.models_[identifier] = None
 
     def refit(self, X, y):
         def send_warnings_to_log(message, category, filename, lineno,
