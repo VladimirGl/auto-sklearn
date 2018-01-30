@@ -16,6 +16,7 @@ pyyaml
 liac-arff
 pandas
 xgboost
+lightgbm
 
 ConfigSpace>=0.4.0,<0.5
 pynisher>=0.4
