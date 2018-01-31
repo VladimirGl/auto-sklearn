@@ -55,7 +55,7 @@ class LightGBMClassifier(AutoSklearnClassificationAlgorithm):
                 nthread=self.nthread,
                 seed=self.seed
                 )
-        self.estimator.fit(X, y, verbose=self.filent)
+        self.estimator.fit(X, y, verbose=self.silent)
 
         return self
 
