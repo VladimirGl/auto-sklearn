@@ -46,7 +46,7 @@ class LightGBMClassifier(AutoSklearnClassificationAlgorithm):
 
         self.num_leaves = int(self.num_leaves)
         self.max_bin = int(self.max_bin)
-        self.min_child_samples = int(min_child_samples)
+        self.min_child_samples = int(self.min_child_samples)
 
         self.estimator = lgb.LGBMClassifier(
                 num_leaves=self.num_leaves,
