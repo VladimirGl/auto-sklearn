@@ -13,23 +13,23 @@ extensions = cythonize(
 
 requirements = [
     "setuptools",
-    "nose",
-    "six",
-    "Cython",
+    "nose==1.3.7",
+    "six==1.11.0",
+    "Cython==0.27.3",
     "numpy>=1.9.0",
     "scipy>=0.14.1",
     "scikit-learn>=0.19,<0.20",
-    "lockfile",
-    "joblib",
-    "psutil",
-    "pyyaml",
-    "liac-arff",
-    "pandas",
+    "lockfile==0.12.2",
+    "joblib==0.11",
+    "psutil==5.4.3",
+    "pyyaml==3.12",
+    "liac-arff==2.1.1",
+    "pandas==0.19.2",
     "ConfigSpace>=0.4.0,<0.5",
     "pynisher>=0.4,<0.5",
     "pyrfr>=0.6.1,<0.8",
     "smac>=0.8,<0.9",
-    "xgboost"
+    "xgboost==0.7.post3"
 ]
 
 with open("autosklearn/__version__.py") as fh:
