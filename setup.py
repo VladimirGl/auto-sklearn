@@ -25,10 +25,10 @@ requirements = [
     "pyyaml==3.12",
     "liac-arff==2.1.1",
     "pandas==0.19.2",
-    "ConfigSpace>=0.4.0,<0.5",
-    "pynisher>=0.4,<0.5",
-    "pyrfr>=0.6.1,<0.8",
-    "smac>=0.8,<0.9",
+    "ConfigSpace>=0.3.1,<0.4",
+    "pynisher>=0.4",
+    "pyrfr==0.2.0",
+    "smac==0.3.0",
     "xgboost==0.7.post3"
 ]
 

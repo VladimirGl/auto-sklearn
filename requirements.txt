@@ -17,7 +17,7 @@ liac-arff==2.1.1
 pandas==0.19.2
 xgboost==0.7.post3
 
-ConfigSpace==0.4.4
-pynisher==0.4.2
-pyrfr==0.7.3
-smac==0.8.0
+ConfigSpace>=0.3.1,<0.4
+pynisher>=0.4
+pyrfr==0.2.0
+smac==0.3.0
